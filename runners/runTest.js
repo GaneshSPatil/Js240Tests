@@ -1,44 +1,29 @@
-var colors = require('colors');
-
-colors.setTheme({
-  silly: ['rainbow'],
-  input: 'grey',
-  verbose: 'cyan',
-  prompt: 'grey',
-  info: 'green',
-  data: 'grey',
-  help: 'cyan',
-  warn: ['yellow','underline'],
-  debug: 'blue',
-  error: 'red'
-});
-
 var fs = require('fs');
-var usages = ['node runTest.js exampleTest.js ==> runs all tests'.debug,
-	'node runTest.js exampleTest.js'.debug+' -list '.info+'==> lists all tests'.debug,
-	'node runTest.js exampleTest.js'.debug+' -stop '.info+'==> stops on first failure'.debug,
-	'node runTest.js exampleTest.js'.debug+' -only '.info+' namePart ==> runs all tests that match the namePart'.debug
+var usages = ['node runTest.js exampleTest.js ==> runs all tests',
+	'node runTest.js exampleTest.js'+' -list '+'==> lists all tests',
+	'node runTest.js exampleTest.js'+' -stop '+'==> stops on first failure',
+	'node runTest.js exampleTest.js'+' -only '+' namePart ==> runs all tests that match the namePart'
 ];
 
 var printLine = function(line){console.log(line);};
 
 var TestUsageException = function(message){
 	this.message = message;
-	this.name = 'TestUsageException'.cyan;
+	this.name = 'TestUsageException';
 };
 var trim_undefined = function(item){return item || ''};
 
 var quit = function(){
-	console.log('Usage:'.silly);
+	console.log('Usage:');
 	usages.forEach(printLine);
 	var args = Array.prototype.slice.call(arguments, 0);
 	throw new TestUsageException(args.map(trim_undefined).join(' ').error);
 };
 
 var readTestDetails = function(testfileName){
-	console.log('loading tests from:'.verbose,testfileName.warn.bold);
+	console.log('loading tests from:',testfileName);
 	var test = require('../'+testfileName).test;
-	test || quit('Missing test object in'.error,testfileName.warn.bold);
+	test || quit('Missing test object in',testfileName);
 	var members = Object.keys(test);
 	var isAFunction = function(field){return ('function' == typeof test[field]);};
 	var methods = members.filter(isAFunction);
@@ -48,8 +33,8 @@ var runTests = function(test,methodNames,option){
 	var failed = 0;
 	var executeTest = function(name){
 		var member = test[name];
-		console.log('--------'.data);
-		console.log('-->'.info,name.info.bold.bold);
+		console.log('--------');
+		console.log('-->',name);
 		try{
 			member();
 		}catch(error){
@@ -59,9 +44,9 @@ var runTests = function(test,methodNames,option){
 		}
 	};
 	methodNames.forEach(executeTest);
-	console.log('--------'.verbose);
+	console.log('--------');
 	var total = methodNames.length;
-	console.log((total-failed +'/'+total).data+' passed'.verbose);
+	console.log((total-failed +'/'+total)+' passed');
 };
 
 
