@@ -38,21 +38,27 @@ var TestBuilder = function(existingTestNames) {
     if(self.canNewTestBeAdded()) {
       var testToAdd = self.getUnsolvedTests()[0];
       self.testeeTestNames.push(testToAdd);
-      return testToAdd;
+      return {
+        "testName": testToAdd,
+        "filesChanged": "complexNumberTest.js"
+      };
     } else {
-      return null;
+      return {
+        "testName": null,
+        "filesChanged": null
+      };
     }
   }
 
   self.getTestFileContent = function() {
     return {
-      "complexNumberTest": [
-        HEADER,
-        getTestsBody(self.testeeTestNames),
-        FOOTER
-      ].join("\n")
+      "complexNumberTest": [ HEADER, getTestsBody(self.testeeTestNames), FOOTER ].join("\n")
     };
   };
+
+  self.getError = function() { return null; };
+
+  self.getInfo = function() { return null; };
 };
 
 module.exports = TestBuilder;

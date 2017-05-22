@@ -4,11 +4,14 @@ module.exports = function(existingTests = []) {
   var testBuilder = new TestBuilder(existingTests);
 
   var canNewTestBeAdded = testBuilder.canNewTestBeAdded();
-  var newTestName = testBuilder.addNewTest();
+  var addedTestMetadata = testBuilder.addNewTest();
 
   return {
     "testFiles": testBuilder.getTestFileContent(),
-    "testName": newTestName,
-    "isAdded": canNewTestBeAdded
+    "testName": addedTestMetadata.testName,
+    "isAdded": canNewTestBeAdded,
+    "error": testBuilder.getError(),
+    "info": testBuilder.getInfo(),
+    "filesChanged": addedTestMetadata.filesChanged
   }
 };
