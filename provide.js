@@ -21,7 +21,7 @@ var getUnsolvedTests = function(existingTests) {
   });
 };
 
-var addNewTest = function(existingTests, testToAdd, testeeProjectPath) {
+var addNewTest = function(existingTests, testToAdd) {
   existingTests.push(testToAdd);
   var testeeTests = getTestsBody(existingTests);
 
@@ -31,14 +31,22 @@ var addNewTest = function(existingTests, testToAdd, testeeProjectPath) {
     FOOTER
   ].join('\n');
 
-  fs.writeFileSync(testeeProjectPath + '/test/exampleTest.js', content);
-  return { isAdded: true, testName: testToAdd };
+  return {
+    "testFiles": {
+      "exampleTest.js": content
+    },
+    "testName": testToAdd,
+    "isAdded": true,
+    "error": null,
+    "info": null,
+    "filesChanged": ["exampleTest.js"]
+  }
 };
 
-module.exports = function(testeeProjectPath, existingTests = []) {
+module.exports = function(existingTests = []) {
   var unresolvedTests = getUnsolvedTests(existingTests);
   if(unresolvedTests.length > 0) {
-    return addNewTest(existingTests, unresolvedTests[0], testeeProjectPath);
+    return addNewTest(existingTests, unresolvedTests[0]);
   } else {
     return { isAdded: false, testName: null };
   };
