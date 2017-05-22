@@ -48,6 +48,9 @@ module.exports = function(existingTests = []) {
   if(unresolvedTests.length > 0) {
     return addNewTest(existingTests, unresolvedTests[0]);
   } else {
-    return { isAdded: false, testName: null };
+    return {
+      "isAdded": false,
+      "info": "No more tests"
+    };
   };
 };
